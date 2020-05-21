@@ -1,0 +1,19 @@
+[auth]
+api_key = "123456" #public key
+api_key_auth = "1234567890" #private key
+
+[notify]
+nootification_on_desktop = false #true or false
+enabled = false #true or false
+symbols = ["BTC-USDT","BIP-USDT"]
+timeout = 30 #seconds
+time = 1 #minutes
+
+[scallping]
+nootification_on_desktop = true #true or false
+enabled = true #true or false
+symbols = ["BTC-USDT"] #more pairs can be cause of errors
+percent = 0.001
+percent_to_play = 80
+save_percent = 2
+strategy = "last" #last(recomemded) or normal
