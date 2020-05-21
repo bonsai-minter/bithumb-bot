@@ -87,7 +87,7 @@ class BithumbGlobalRestAPI:
             'timestamp': ts,
         }
         data.update(parms)
-
+        print(parms)
         data['signature'] = self.__secret.sign(data)
         response = self.session.post(url=URL + action, json=data, timeout=15)
         response = load_json(response.text)
@@ -140,6 +140,14 @@ class BithumbGlobalRestAPI:
 
     def place_order(self, symbol, side, price, amount,type_sell='limit'):
         symbol = symbol.replace('/', '-')
+        accuracy = self.get_accuracy(symbol)["accuracy"]
+        if direction(side) == "buy":
+            price = round(float(price),int(accuracy[0]))
+            amount = round(float(amount),int(accuracy[1]))
+        else:
+            price = round(float(price),int(accuracy[1]))
+            amount = round(float(amount),int(accuracy[0]))
+
         parms = {
             'symbol': symbol,
             'type': type_sell,

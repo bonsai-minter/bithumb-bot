@@ -1,16 +1,19 @@
 #Copyright [2020] [commaster] Licensed under the Apache License, Version 2.0 (the «License»);
 import BithumbGlobal
 import strategy.first
+import strategy.second
 import time
 import toml
 import threading
 import os
 import plyer
+import logging
 import colorama
 from colorama import Fore, Back, Style
 import prettyoutput
 status = []
-
+DEBUG = False
+logging.basicConfig(filename="sample.log", level=logging.INFO)
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 config = toml.load("config.toml")
@@ -19,7 +22,7 @@ client = BithumbGlobal.BithumbGlobalRestAPI(config["auth"]["api_key"],config["au
 
 
 def get_balance(limit):
-    text = ""
+    text = "Balance:\n"
     text_frozen = ""
     itera = 0
     for i in client.balance():
@@ -63,44 +66,52 @@ def scallping(pair):
             time.sleep(3)
             strateg.start(pair,type_thing="buy",nootification_on_desktop=config['scallping']["nootification_on_desktop"],status=status,strategy=configa['scallping']['strategy'],percent=configa['scallping']['percent'],percent_to_play=configa['scallping']['percent_to_play'],save_percent=configa['scallping']['save_percent'],price=price)
 
+def triangle(symbol):
+    global config,client,status
+    while True:
+        straa = strategy.second.strategy(client)
+        straa.start(config['triangle']["min_percent"],config['triangle']["symbol"],config['triangle']['percent_to_play'],status,config['triangle']["ordering"])
+        time.sleep(config['triangle']["timeout"] * 60)
 
+if not DEBUG:
+    if config["scallping"]["enabled"]:
+        for i in config["scallping"]["symbols"]:
+            my_thread = threading.Thread(target=scallping, args=(i,))
+            my_thread.start() 
 
+    def _notify():
+        global config
+        if config["notify"]["enabled"]:
+            for i in config["notify"]["symbols"]:
 
-if config["scallping"]["enabled"]:
-    for i in config["scallping"]["symbols"]:
-        my_thread = threading.Thread(target=scallping, args=(i,))
-        my_thread.start() 
-
-def _notify():
-    global config
-    if config["notify"]["enabled"]:
-        for i in config["notify"]["symbols"]:
-
-            my_thread = threading.Thread(target=notify, args=(i,))
-            my_thread.start()
-            time.sleep(config["notify"]["timeout"])
-threading.Thread(target=_notify).start()
-column = int(os.get_terminal_size().lines * 2/5)
-dat = get_balance(column)
-
-def _balance():
-    global dat,column,config
+                my_thread = threading.Thread(target=notify, args=(i,))
+                my_thread.start()
+                time.sleep(config["notify"]["timeout"])
+    threading.Thread(target=_notify).start()
+    if config["triangle"]["enabled"]:
+        threading.Thread(target=triangle,args = (config["triangle"]["symbol"],)).start()
     column = int(os.get_terminal_size().lines * 2/5)
     dat = get_balance(column)
-    config = toml.load("config.toml")
-    time.sleep(30)
 
-while True:
-    column = int(os.get_terminal_size().lines * 2/5)
-    columnb = int(os.get_terminal_size().lines * 2/5)
-    clear()
-    print(dat)
-    print(Fore.GREEN + "=" * os.get_terminal_size().columns)
-    print(Style.RESET_ALL,end="")
-    itera = 0
-    for i in status[::-1]:
-        itera += 1
-        if itera < columnb:
-            print(prettyoutput.info(string=i,prn_out=False,space=False))
+    def _balance():
+        global dat,column,config
+        column = int(os.get_terminal_size().lines * 2/5)
+        dat = get_balance(column)
+        config = toml.load("config.toml")
+        time.sleep(30)
 
-    time.sleep(0.1)
+    while True:
+        column = int(os.get_terminal_size().lines * 2/5)
+        columnb = int(os.get_terminal_size().lines * 3/5)
+        clear()
+        print(dat)
+        print(Fore.GREEN + "=" * os.get_terminal_size().columns)
+        print(Style.RESET_ALL,end="")
+        itera = 0
+        for i in status[::-1]:
+            itera += 1
+            if itera < columnb:
+                print(prettyoutput.info(string=i,prn_out=False,space=False))
+
+        time.sleep(0.1)
+
