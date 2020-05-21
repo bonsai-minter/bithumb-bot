@@ -1,3 +1,4 @@
+#Copyright [2020] [commaster] Licensed under the Apache License, Version 2.0 (the «License»);
 from json import loads as load_json
 from datetime import datetime as DateTime
 from base64 import b64encode, b64decode
