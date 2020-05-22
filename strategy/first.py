@@ -1,8 +1,9 @@
 #Copyright [2020] [commaster] Licensed under the Apache License, Version 2.0 (the «License»);
 import time
 import plyer
-
+import logging
 import prettyoutput
+logging.basicConfig(filename="sample.log", level=logging.DEBUG)
 class strategy:
 	client = None
 	def __init__(self,client):
@@ -20,6 +21,7 @@ class strategy:
 		percent_lower = (-percent) / 100 + 1
 		percent_high = (percent) / 100 + 1
 		fun = choose[strategy]
+		pricea = price		
 		if price == None:
 			price = fun(data)
 		
@@ -27,34 +29,49 @@ class strategy:
 		accuracy = self.client.get_accuracy(symbol)["accuracy"]
 
 		if type_thing == "buy":
-
-			aa = accuracy[0]
-			bb = accuracy[1]
 			side = symbol.split("-")[1]
+			sida = symbol.split("-")[0]
 			count = self.client.balance(side)
+			max_count = self.client.get_coin_fee(symbol.split("-")[0])
 			price_to_buy = percent_lower * price
 			price_to_sell = percent_high * price
 		else:
-			aa = accuracy[1]
-			bb = accuracy[0]
 			side = symbol.split("-")[0]
+			sida = symbol.split("-")[1]
 			count = self.client.balance(side)
+			max_count = self.client.get_coin_fee(symbol.split("-")[1])
 			price_to_buy = percent_high * price
 			price_to_sell = percent_lower * price
 
 		count = float(count[0]["count"]) * (percent_to_play / 100)
+		min_count = self.client.get_coin_fee(side)
+		if type_thing == "sell":
+			counts = round(float(count),int(accuracy[1]))
+		else:
+			counts = round(float(count / price_to_buy),int(accuracy[0]))
+		if count < float(min_count["minTxAmt"]):
+			countaaa = str(count)
+			status.append(prettyoutput.warning(string=f"Not enough amount {countaaa} {side}",prn_out=False,space=False))
+			return None
 
 
 		if type_thing == "sell":
-			id = self.client.place_order(symbol,type_thing,round(float(price_to_buy),int(bb)),round(float(count),int(aa)))
-			counts = round(float(count),int(aa))
+			id = self.client.place_order(symbol,type_thing,float(price_to_buy),float(count))
+			counts = round(float(count),8)
 		else:
-			id = self.client.place_order(symbol,type_thing,round(float(price_to_buy),int(aa)),round(float(count / price_to_buy),int(bb)))
-			counts = round(float(count / price_to_buy),int(bb))
-		price_to_buy = round(float(price_to_buy),int(aa))
-		status.append(f'Create order, Price: {price_to_buy} Count: {counts} {side}')
+			id = self.client.place_order(symbol,type_thing,float(price_to_buy),float(count / price_to_buy))
+			counts = round(float(count / price_to_buy),8)
+		
+		price_to_buy = float(price_to_buy)
+		if type_thing == "buy":
+			sida = symbol.split("-")[1]
+		else:
+			sida = symbol.split("-")[0]
+		countss = '{0:.10f}'.format(counts)
+	
+		status.append(f'Create order, Price: {price_to_buy} Count: {countss} {sida}')
 		if nootification_on_desktop:
-			plyer.notification.notify( message=f'Price: {price_to_buy}\nCount: {counts} {side}',
+			plyer.notification.notify( message=f'Price: {price_to_buy}\nCount: {countss} {sida}',
 				app_name='Bithumb Bot',
 				title=f'Order Created {symbol}', )
 		time.sleep(3)
@@ -66,27 +83,27 @@ class strategy:
 			data = self.client.ticker(symbol)[0]
 
 			if float(data["c"]) * (1 + save_percent / 100) < price_to_buy or float(data["c"]) * (1 - save_percent / 100) > price_to_buy:
-				self.client.cancel_order(symbol,id)
-				# if type_thing == "sell":
-				# 	self.client.place_order(symbol,type_thing,-1,round(float(count),int(aa)),type_sell="market")
-				# else:
-				# 	self.client.place_order(symbol,type_thing,-1,round(float(count),int(bb)),type_sell="market")
+				try:
+					self.client.cancel_order(symbol,id)
+				except:
+					pass
 			time.sleep(0.5)
 			dat = self.client.query_order(symbol,id)
 		if dat["status"] == "success":
-			if price == None:
-				status.append(f'Order bought {symbol}, Price: {price_to_buy} Count: {count} {side}')
-				if nootification_on_desktop:
-					plyer.notification.notify( message=f'Price: {price_to_buy}\nCount: {count} {side}',
-						app_name='Bithumb Bot',
-						title=f'Order bought {symbol}', )
-			else:
-				win = round(abs(price_to_buy - price) * count,6)
-				status.append(f'Order bought {side}, Win: {win} {side}, Price: {price_to_buy} Count: {count} {side}')
-				if nootification_on_desktop:
-					plyer.notification.notify( message=f'Price: {price_to_buy}\nCount: {count} {side}',
-						app_name='Bithumb Bot',
-						title=f'Order bought {symbol}\nWin: {win} {side}', )
+			#if pricea == None:
+			countss = '{0:.10f}'.format(counts)
+			status.append(f'Order bought {symbol}, Price: {price_to_buy} Count: {countss} {sida}')
+			if nootification_on_desktop:
+				plyer.notification.notify( message=f'Price: {price_to_buy}\nCount: {countss} {sida}',
+					app_name='Bithumb Bot',
+					title=f'Order bought {symbol}', )
+			# else:
+			# 	win = round(abs(price_to_buy - pricea - float(min_count["makerFeeRate"]) - float(max_count["makerFeeRate"])) * count,6)
+			# 	status.append(f'Order bought {side}, Win: {win} {side}, Price: {price_to_buy} Count: {count} {side}')
+			# 	if nootification_on_desktop:
+			# 		plyer.notification.notify( message=f'Price: {price_to_buy}\nCount: {count} {side}',
+			# 			app_name='Bithumb Bot',
+			# 			title=f'Order bought {symbol}\nWin: {win} {side}', )
 		else:
 			status.append(f'Order cancel, {symbol}',)
 			if nootification_on_desktop:

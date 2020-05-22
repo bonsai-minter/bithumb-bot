@@ -13,7 +13,7 @@ from colorama import Fore, Back, Style
 import prettyoutput
 status = []
 DEBUG = False
-logging.basicConfig(filename="sample.log", level=logging.INFO)
+logging.basicConfig(filename="sample.log", level=logging.DEBUG)
 def clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 config = toml.load("config.toml")
@@ -57,14 +57,14 @@ def scallping(pair):
 
     while True:
         configa = config
-        try:
-            price = strateg.start(pair,type_thing="buy",nootification_on_desktop=config['scallping']["nootification_on_desktop"],status=status,strategy=configa['scallping']['strategy'],percent=configa['scallping']['percent'],percent_to_play=configa['scallping']['percent_to_play'],save_percent=configa['scallping']['save_percent'])
-            time.sleep(3)
-            strateg.start(pair,type_thing="sell",nootification_on_desktop=config['scallping']["nootification_on_desktop"],status=status,strategy=configa['scallping']['strategy'],percent=configa['scallping']['percent'],percent_to_play=configa['scallping']['percent_to_play'],save_percent=configa['scallping']['save_percent'],price=price)
-        except:
-            price = strateg.start(pair,type_thing="sell",nootification_on_desktop=config['scallping']["nootification_on_desktop"],status=status,strategy=configa['scallping']['strategy'],percent=configa['scallping']['percent'],percent_to_play=configa['scallping']['percent_to_play'],save_percent=configa['scallping']['save_percent'])
-            time.sleep(3)
-            strateg.start(pair,type_thing="buy",nootification_on_desktop=config['scallping']["nootification_on_desktop"],status=status,strategy=configa['scallping']['strategy'],percent=configa['scallping']['percent'],percent_to_play=configa['scallping']['percent_to_play'],save_percent=configa['scallping']['save_percent'],price=price)
+        # try:
+        price = strateg.start(pair,type_thing="buy",nootification_on_desktop=config['scallping']["nootification_on_desktop"],status=status,strategy=configa['scallping']['strategy'],percent=configa['scallping']['percent'],percent_to_play=configa['scallping']['percent_to_play'],save_percent=configa['scallping']['save_percent'])
+        time.sleep(5)
+        strateg.start(pair,type_thing="sell",nootification_on_desktop=config['scallping']["nootification_on_desktop"],status=status,strategy=configa['scallping']['strategy'],percent=configa['scallping']['percent'],percent_to_play=configa['scallping']['percent_to_play'],save_percent=configa['scallping']['save_percent'],price=price)
+        # except:
+        #     price = strateg.start(pair,type_thing="sell",nootification_on_desktop=config['scallping']["nootification_on_desktop"],status=status,strategy=configa['scallping']['strategy'],percent=configa['scallping']['percent'],percent_to_play=configa['scallping']['percent_to_play'],save_percent=configa['scallping']['save_percent'])
+        #     time.sleep(3)
+        #     strateg.start(pair,type_thing="buy",nootification_on_desktop=config['scallping']["nootification_on_desktop"],status=status,strategy=configa['scallping']['strategy'],percent=configa['scallping']['percent'],percent_to_play=configa['scallping']['percent_to_play'],save_percent=configa['scallping']['save_percent'],price=price)
 
 def triangle(symbol):
     global config,client,status
@@ -73,12 +73,14 @@ def triangle(symbol):
         straa.start(config['triangle']["min_percent"],config['triangle']["symbol"],config['triangle']['percent_to_play'],status,config['triangle']["ordering"])
         time.sleep(config['triangle']["timeout"] * 60)
 
+
+
 if not DEBUG:
+
     if config["scallping"]["enabled"]:
         for i in config["scallping"]["symbols"]:
             my_thread = threading.Thread(target=scallping, args=(i,))
             my_thread.start() 
-
     def _notify():
         global config
         if config["notify"]["enabled"]:
@@ -88,8 +90,6 @@ if not DEBUG:
                 my_thread.start()
                 time.sleep(config["notify"]["timeout"])
     threading.Thread(target=_notify).start()
-    if config["triangle"]["enabled"]:
-        threading.Thread(target=triangle,args = (config["triangle"]["symbol"],)).start()
     column = int(os.get_terminal_size().lines * 2/5)
     dat = get_balance(column)
 
@@ -111,7 +111,10 @@ if not DEBUG:
         for i in status[::-1]:
             itera += 1
             if itera < columnb:
-                print(prettyoutput.info(string=i,prn_out=False,space=False))
+                if "WARNING" in i:
+                    print(i)
+                else:
+                    print(prettyoutput.info(string=i,prn_out=False,space=False))
 
         time.sleep(0.1)
 

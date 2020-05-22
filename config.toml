@@ -1,6 +1,6 @@
 [auth]
-api_key = "" #public key
-api_key_auth = "" #private key
+api_key = "47e6a5a4cd1708424b68db2f39e2d34" #public key
+api_key_auth = "43ffb502acefb012df5e3aebf98657909830d6f68db2b7f1a85dcb0ce2661eb0" #private key
 
 [notify]
 nootification_on_desktop = false #true or false
@@ -11,11 +11,11 @@ time = 0.5 #minutes
 
 [scallping]
 nootification_on_desktop = false #true or false
-enabled = false #true or false
+enabled = true #true or false
 symbols = ["BTC-USDT"] #more pairs can be cause of errors
 percent = 0.001
 percent_to_play = 80
-save_percent = 2
+save_percent = 0.05
 strategy = "last" #last(recomemded) or normal
 
 [triangle]

@@ -72,7 +72,7 @@ class BithumbGlobalRestAPI:
         self.__session = session = requests.session()
         session.headers.update({'content-Type': 'application/json'})
 
-
+    config_dat = None
     @property
     def session(self):
         return self.__session
@@ -86,8 +86,8 @@ class BithumbGlobalRestAPI:
             'msgNo': ts,
             'timestamp': ts,
         }
-        data.update(parms)
-        print(parms)
+        if parms is not None:
+            data.update(parms)
         data['signature'] = self.__secret.sign(data)
         response = self.session.post(url=URL + action, json=data, timeout=15)
         response = load_json(response.text)
@@ -96,6 +96,15 @@ class BithumbGlobalRestAPI:
             raise BithumbGlobalError(response['code'], response['msg'])
         return response['data']
 
+
+    def config(self):
+        if self.config_dat is None:
+            self.config_dat = self.post('config',parms=None)
+        return self.config_dat
+    def get_coin_fee(self,coin):
+        for i in self.config()["coinConfig"]:
+            if i["name"] == coin:
+                return i
 
     def withdraw(self, cointype, address, volume, mark='AUTO', memo=None):
         parms = {
@@ -145,8 +154,8 @@ class BithumbGlobalRestAPI:
             price = round(float(price),int(accuracy[0]))
             amount = round(float(amount),int(accuracy[1]))
         else:
-            price = round(float(price),int(accuracy[1]))
-            amount = round(float(amount),int(accuracy[0]))
+            price = round(float(price),int(accuracy[0]))
+            amount = round(float(amount),int(accuracy[1]))
 
         parms = {
             'symbol': symbol,

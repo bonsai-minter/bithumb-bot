@@ -1,7 +1,8 @@
 import time
 import plyer
-
+import logging
 import prettyoutput
+logging.basicConfig(filename="sample.log", level=logging.DEBUG) 
 class strategy:
     client = None
     def __init__(self,client):
@@ -23,7 +24,7 @@ class strategy:
 
                         for y in all_pairs:
                             if x['s'].split("-")[1] == y['s'].split('-')[0] and y['s'].split('-')[1] == coin:
-                                dat.append([i,'b',x,'b',y,'b',float(i['c']) * float(x['c']) * float(y['c'])])
+                                dat.append([i,'b',x,'b',y,'b',(float(i['c']) - client.get_coin_fee()) * float(x['c']) * float(y['c'])])
                             elif x['s'].split("-")[1] == y['s'].split('-')[1] and y['s'].split('-')[0] == coin:
                                 dat.append([i,'b',x,'b',y,'s',float(i['c']) * float(x['c']) / float(y['c'])])
                         # print(i,x,win,win * float(x['c']))
