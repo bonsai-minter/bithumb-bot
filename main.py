@@ -7,3 +7,4 @@ print("Creator: @commaster1, https://github.com/bonsai-minter/bithumb-bot")
 print()
 print("Wait 3 seconds....")
 time.sleep(3)
+import strategy.bithumb
