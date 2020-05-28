@@ -1,8 +1,11 @@
 #Copyright [2020] [commaster] Licensed under the Apache License, Version 2.0 (the «License»);
-import time
-import plyer
 import logging
+import time
+
+import plyer
+
 import prettyoutput
+
 logging.basicConfig(filename="sample.log", level=logging.DEBUG)
 class strategy:
 	client = None
@@ -90,20 +93,12 @@ class strategy:
 			time.sleep(0.5)
 			dat = self.client.query_order(symbol,id)
 		if dat["status"] == "success":
-			#if pricea == None:
 			countss = '{0:.10f}'.format(counts)
 			status.append(f'Order bought {symbol}, Price: {price_to_buy} Count: {countss} {sida}')
 			if nootification_on_desktop:
 				plyer.notification.notify( message=f'Price: {price_to_buy}\nCount: {countss} {sida}',
 					app_name='Bithumb Bot',
 					title=f'Order bought {symbol}', )
-			# else:
-			# 	win = round(abs(price_to_buy - pricea - float(min_count["makerFeeRate"]) - float(max_count["makerFeeRate"])) * count,6)
-			# 	status.append(f'Order bought {side}, Win: {win} {side}, Price: {price_to_buy} Count: {count} {side}')
-			# 	if nootification_on_desktop:
-			# 		plyer.notification.notify( message=f'Price: {price_to_buy}\nCount: {count} {side}',
-			# 			app_name='Bithumb Bot',
-			# 			title=f'Order bought {symbol}\nWin: {win} {side}', )
 		else:
 			status.append(f'Order cancel, {symbol}',)
 			if nootification_on_desktop:

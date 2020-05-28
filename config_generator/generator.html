@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <title>Config Generator</title>
+</head>
+
+<body>
+<div class="container footer">
+    <h1 class="text-center">Bithumb Bot</h1>
+    <div class="justify-content-between">
+        <div name="auth">
+            <h3>Auth</h3>
+            <div class="col-auto">
+                <input type="text" class="form-control mb-2" id="public_key" placeholder="Публичный ключ с bithumb">
+            </div>
+            <div class="col-auto">
+                <input type="text" class=" form-control mb-2" id="private_key" placeholder="Приватным ключ с bithumb">
+            </div>
+        </div>
+        <h3>Notify</h3>
+        <div name="notify" style="margin-left: 10px;">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="notify_enable">
+                <label class="form-check-label" for="defaultCheck1" color="white">
+                    Включить
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="desktop_nootification_notify">
+                <label class="form-check-label" for="defaultCheck1">
+                    Уведомления на рабочем столе
+                </label>
+            </div>
+            <div class="col-auto" style="margin-top: 5px;">
+                <input type="text" class=" form-control mb-2" id="pairs_notify"
+                       placeholder="Введите пары через пробелы">
+            </div>
+            <div class="col-auto d-flex" style="margin-top: 5px;">
+                <input class="form-control col-1" type="number" step="10" value="" id="timeout_notify">
+                <label style="margin-top: auto;" class="col-3" pattern="^[0-9]+$" value='10'>
+                    Секунд таймаут между парами
+                </label>
+            </div>
+            <div class="col-auto d-flex" style="margin-top: 5px;">
+                <input class="form-control col-1" type="number" step="10" value="" id="timeout_minute_notify">
+                <label style="margin-top: auto;" class="col-3" pattern="^[0-9]+$" value=10 value='1'>
+                    Минут между уведомлениями
+                </label>
+            </div>
+        </div>
+        <h3>Scallping</h3>
+        <div name="scallping" style="margin-left: 10px;">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="scallping_enable">
+                <label class="form-check-label" for="defaultCheck1" color="white">
+                    Включить
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="desktop_nootification_scallping">
+                <label class="form-check-label" for="defaultCheck1">
+                    Уведомления на рабочем столе
+                </label>
+            </div>
+            <div class="col-auto" style="margin-top: 5px;">
+                <input type="text" class=" form-control mb-2" id="pairs_scallping"
+                       placeholder="Введите пары через пробелы">
+            </div>
+            <div class="col-auto d-flex" style="margin-top: 5px;">
+                <input class="form-control col-1" type="number" step="0.0001" value="" id="percent_win_scallping">
+                <label style="margin-top: auto;" class="col-11" value='10'>
+                    Проценты разница между покупкой и продажей
+                </label>
+            </div>
+            <div class="col-auto d-flex" style="margin-top: 5px;">
+                <input class="form-control col-1" type="number" step="0.0001" value="" id="percent_play_scallping">
+                <label style="margin-top: auto;" class="col-11" value=10 value='1'>
+                    Процент на сколько программа будет использовать ваш баланс
+                </label>
+            </div>
+            <div class="col-auto d-flex" style="margin-top: 5px;">
+                <input class="form-control col-1" type="number" step="0.0001" value="" id="save_percent_scallping">
+                <label style="margin-top: auto;" class="col-11" value='10'>
+                    Проценты если от начальной цены пойдет вверх или вниз на то количество процентов то контракт будет
+                    отменен
+                </label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="last" value="option1">
+                <label class="form-check-label" for="inlineRadio1">Last</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="normal" value="option2">
+                <label class="form-check-label" for="inlineRadio2">Normal</label>
+            </div>
+        </div>
+        <br>
+        <button type="button" id="dwn-btn" class="btn btn-outline-primary">Скачать конфиг</button>
+    </div>
+</div>
+
+</body>
+<script src="https://nickdeny.github.io/darkmode-js/dist/darkmode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.5/lib/darkmode-js.min.js"></script>
+<script src="toml.min.js"></script>
+<script>
+var options = {
+  saveInCookies: true, // default: true,
+  label: '🌓', // default: ''
+  autoMatchOsTheme: true // default: true
+}
+  new Darkmode(options).showWidget();
+
+</script>
+
+<script type="text/javascript">
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+
+document.getElementById("dwn-btn").addEventListener("click", function(){
+    if (document.getElementById("normal").checked) {strategy_value="normal"} else {strategy_value="last"}
+	var text = toml.dump({'auth': {'api_key': document.getElementById("public_key").value, 'api_key_auth': document.getElementById("private_key").value}}) + toml.dump({'notify':{"enabled":document.getElementById("notify_enable").checked,'nootification_on_desktop':document.getElementById("desktop_nootification_notify").value,'symbols':document.getElementById("pairs_notify").value.split(" "),'timeout':document.getElementById("timeout_notify").value,'time':document.getElementById("timeout_minute_notify").value}}) + toml.dump({'scallping':{"enabled":document.getElementById("scallping_enable").checked,'nootification_on_desktop':document.getElementById("desktop_nootification_scallping").checked,'percent':document.getElementById("percent_win_scallping").value,'percent_to_play':document.getElementById("percent_play_scallping").value,'symbols':document.getElementById("pairs_scallping").value.split(" "),'save_percent':document.getElementById("save_percent_scallping").value}});
+    var filename = "config.toml";
+    
+    download(filename, text);
+}, false);
+
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</html>

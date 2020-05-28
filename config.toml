@@ -1,30 +1,20 @@
 [auth]
-api_key = "47e6a5a4cd1708424b68db2f39e2d34" #public key
-api_key_auth = "43ffb502acefb012df5e3aebf98657909830d6f68db2b7f1a85dcb0ce2661eb0" #private key
+api_key = "47e6a5a4cd1708424b68db2f39e2d34" #public key Not Valid) ### Публичный ключ с bithumb
+api_key_auth = "43ffb502acefb012df5e3aebf98657909830d6f68db2b7f1a85dcb0ce2661eb0" #private key Not Valid) ### Приватный ключ с bithumb
 
 [notify]
-nootification_on_desktop = false #true or false
-enabled = true #true or false
-symbols = ["BTC-USDT","BIP-USDT"]
-timeout = 30 #seconds
-time = 0.5 #minutes
+nootification_on_desktop = false #true or false ### Уведомлять ли вас о цене через оповещения вашего рабочего окружения?
+enabled = true #true or false ### включать ли модуль?
+symbols = ["BTC-USDT","BIP-USDT"] ### За какими парами следить?
+timeout = 30 #seconds ### В секундах задержка между оповещением пар
+time = 0.5 #minutes ### В минутах
 
 [scallping]
-nootification_on_desktop = false #true or false
-enabled = true #true or false
-symbols = ["BTC-USDT"] #more pairs can be cause of errors
-percent = 0.001
-percent_to_play = 80
-save_percent = 0.05
-strategy = "last" #last(recomemded) or normal
+nootification_on_desktop = false #true or false ### Уведомлять ли вас о контрактах через оповещения вашего рабочего окружения?
+enabled = false #true or false ### включать ли модуль?
+symbols = ["BTC-USDT"] #more pairs can be cause of errors ### Какие пары торговать?
+percent = 0.001 #сколько вы будете заробляти с двух контрактов примерно в %
+percent_to_play = 80 #сколько средств тратить на трейдинг
+save_percent = 0.05 #на сколько цена должна измениться для отмена контракта
+strategy = "last" #last(recomemded) or normal ### last - береться цена с последнего контракта а normal - береться минимальная цена и максимальная находиться среднее значение и от них уже считается осталоьное
 
-[triangle]
-#WARNING THIS IS TEST FUNCTION! 
-#STRATEGY CAN WORK VERY BAD
-nootification_on_desktop = false #true or false
-enabled = true #true or false
-ordering = false
-timeout = 5 #minutes 
-symbol = "USDT"
-min_percent = 6
-percent_to_play = 80

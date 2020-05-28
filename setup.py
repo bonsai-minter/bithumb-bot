@@ -3,6 +3,7 @@ from setuptools import setup
 setup(
 	name='bithumb-bot',
 	version='0.13',
+	scripts=["main.py"],
 	packages=['strategy', 'prettyoutput', 'BithumbGlobal'],
 	url='https://github.com/bonsai-minter/bithumb-bot',
 	license='Copyright [2020] [commaster] Licensed under the Apache License, Version 2.0 (the «License»);',
@@ -11,6 +12,6 @@ setup(
 	description='auto trading bot bithumb',
 	entry_points={
 		'console_scripts' :
-			['bithumb-bot = core.bithumb:__init__']
+			['bithumb-bot = strategy.bithumb:__init__']
 	}
 )

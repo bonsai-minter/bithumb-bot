@@ -1,6 +1,4 @@
 # Copyright [2020] [commaster] Licensed under the Apache License, Version 2.0 (the «License»);
-__version__ = "0.6"
-
 import logging
 import os
 import threading
@@ -139,7 +137,6 @@ try :
 
 			time.sleep(0.1)
 except Exception as e :
-	clear()
 	print("ERROR!!!!! ")
 	print("Write message with error to @commaster1 or issue to https://github.com/bonsai-minter/bithumb-bot", "\n")
 	print(e)
